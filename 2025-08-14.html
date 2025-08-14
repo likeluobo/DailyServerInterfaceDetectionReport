@@ -27,6 +27,11 @@
             margin: 0;
             font-size: 2.5em;
         }
+        .header h2 {
+            margin: 10px 0 0 0;
+            font-size: 1.5em;
+            font-weight: normal;
+        }
         .summary-box {
             background: white;
             border-radius: 10px;
@@ -197,8 +202,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>🏨 酒店接口调用结果 - 2025-08-14</h1>
-        <p>📋 以下是今日酒店接口调用情况的汇总</p>
+        <h1>🏨 酒店接口调用结果</h1>
+        <h2>2025-08-14</h2>
     </div>
 
 
@@ -556,13 +561,12 @@
 
     <div class="section">
         <h2 class="section-title">⚠️ 需要关注的接口</h2>
-        <p>以下接口出现报错或返回数据为空，请及时检查并修复</p>
         <table>
             <thead>
                 <tr>
                     <th>🕐 时间</th>
                     <th>📡 接口名称</th>
-                    <th>📊 状态</th>
+                    <th>📊 状态（含耗时）</th>
                 </tr>
             </thead>
             <tbody>
@@ -570,19 +574,19 @@
                 <tr>
                     <td>🕒 05:00:31</td>
                     <td>🧩 hiltonAPP</td>
-                    <td><span class="status-error">❌ 数据为空 - 耗时：0.59秒</span></td>
+                    <td><span class="status-error">❌ 数据为空</span><br><small>(<span class="fast-response">🚀 0.59秒 <span class="response-tag fast">(极速响应)</span></span>)</small></td>
                 </tr>
 
                 <tr>
                     <td>🕒 05:01:31</td>
                     <td>🧩 fourSeason</td>
-                    <td><span class="status-error">❌ 数据为空 - 耗时：2.44秒</span></td>
+                    <td><span class="status-error">❌ 数据为空</span><br><small>(<span class="fast-response">⚡ 2.44秒 <span class="response-tag fast">(快速响应)</span></span>)</small></td>
                 </tr>
 
                 <tr>
                     <td>🕒 05:04:26</td>
                     <td>🧩 kitanno</td>
-                    <td><span class="status-error">💥 报错 - 耗时：32.08秒</span></td>
+                    <td><span class="status-error">💥 报错</span><br><small>(<span class="very-slow-response">🐢 32.08秒 <span class="response-tag very-slow">(响应较慢)</span></span>)</small></td>
                 </tr>
 
             </tbody>
