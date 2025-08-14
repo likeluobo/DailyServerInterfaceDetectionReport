@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>酒店接口调用结果 - 2025-08-14</title>
+        <title>酒店接口调用结果</title>
+        <link rel="icon" type="image/png" href="https://img.icons8.com/forma-light-sharp/96/science-application.png">
         <style>
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,7 +20,6 @@
                 color: white;
                 padding: 40px 30px;
                 border-radius: 15px;
-                text-align: center;
                 margin-bottom: 30px;
                 box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
                 position: relative;
@@ -38,6 +38,7 @@
             .header-content {
                 position: relative;
                 z-index: 1;
+                text-align: center;
             }
             .header h1 {
                 margin: 0 0 15px 0;
@@ -45,15 +46,16 @@
                 letter-spacing: 1px;
                 text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
-            .header-date {
-                font-size: 1.4em;
-                font-weight: 300;
+            .update-date {
+                position: absolute;
+                bottom: 20px;
+                right: 30px;
+                font-size: 1em;
+                font-weight: bold;
                 opacity: 0.95;
                 margin: 0;
                 letter-spacing: 1px;
-            }
-            .header-date::before {
-                content: "📅 ";
+                z-index: 2;
             }
             .summary-box {
                 background: white;
@@ -139,12 +141,6 @@
                 font-weight: bold;
                 color: #667eea;
             }
-            .footer {
-                text-align: right;
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #eee;
-            }
             hr {
                 border: 0;
                 height: 1px;
@@ -166,8 +162,10 @@
                     font-size: 2em;
                 }
 
-                .header-date {
-                    font-size: 1.2em;
+                .update-date {
+                    bottom: 15px;
+                    right: 20px;
+                    font-size: 0.9em;
                 }
 
                 .summary-stats {
@@ -210,8 +208,10 @@
                     font-size: 1.7em;
                 }
 
-                .header-date {
-                    font-size: 1.1em;
+                .update-date {
+                    bottom: 10px;
+                    right: 15px;
+                    font-size: 0.8em;
                 }
 
                 table {
@@ -235,8 +235,8 @@
         <div class="header">
             <div class="header-content">
                 <h1>🏨 酒店接口调用结果</h1>
-                <p class="header-date"><strong>2025-08-14</strong></p>
             </div>
+            <p class="update-date">更新于 2025-08-14 15:10:16</p>
         </div>
     
     <div class="summary-box">
@@ -255,6 +255,58 @@
                 <div>失败次数 ❌ <span style="color: #dc3545;">(6.0%)</span></div>
             </div>
         </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">🚀 接口性能分析</h2>
+        <div class="performance-stats">
+            <div class="perf-item">
+                <div class="perf-value">5.56秒</div>
+                <div>平均响应时间 ⏱️</div>
+            </div>
+            <div class="perf-item">
+                <div class="perf-value">0.47秒</div>
+                <div>最快响应时间 🏃</div>
+            </div>
+            <div class="perf-item">
+                <div class="perf-value">32.08秒</div>
+                <div>最慢响应时间 🐢</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">⚠️ 亟需关注接口</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>🕐 时间</th>
+                    <th>📡 接口名称</th>
+                    <th>📊 状态（含耗时）</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>🕒 05:00:31</td>
+                    <td>🧩 hiltonAPP</td>
+                    <td><span class="status-error">❌ 数据为空</span><br><small>(<span class="fast-response">🚀 0.59秒 <span class="response-tag fast">(极速响应)</span></span>)</small></td>
+                </tr>
+
+                <tr>
+                    <td>🕒 05:01:31</td>
+                    <td>🧩 fourSeason</td>
+                    <td><span class="status-error">❌ 数据为空</span><br><small>(<span class="fast-response">⚡ 2.44秒 <span class="response-tag fast">(快速响应)</span></span>)</small></td>
+                </tr>
+
+                <tr>
+                    <td>🕒 05:04:26</td>
+                    <td>🧩 kitanno</td>
+                    <td><span class="status-error">💥 报错</span><br><small>(<span class="very-slow-response">🐢 32.08秒 <span class="response-tag very-slow">(响应较慢)</span></span>)</small></td>
+                </tr>
+
+            </tbody>
+        </table>
     </div>
 
     <div class="section">
@@ -573,61 +625,5 @@
         </table>
     </div>
 
-    <div class="section">
-        <h2 class="section-title">🚀 性能分析</h2>
-        <div class="performance-stats">
-            <div class="perf-item">
-                <div class="perf-value">5.56秒</div>
-                <div>平均响应时间 ⏱️</div>
-            </div>
-            <div class="perf-item">
-                <div class="perf-value">0.47秒</div>
-                <div>最快响应时间 🏃</div>
-            </div>
-            <div class="perf-item">
-                <div class="perf-value">32.08秒</div>
-                <div>最慢响应时间 🐢</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2 class="section-title">⚠️ 需要关注的接口</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>🕐 时间</th>
-                    <th>📡 接口名称</th>
-                    <th>📊 状态（含耗时）</th>
-                </tr>
-            </thead>
-            <tbody>
-
-                <tr>
-                    <td>🕒 05:00:31</td>
-                    <td>🧩 hiltonAPP</td>
-                    <td><span class="status-error">❌ 数据为空</span><br><small>(<span class="fast-response">🚀 0.59秒 <span class="response-tag fast">(极速响应)</span></span>)</small></td>
-                </tr>
-
-                <tr>
-                    <td>🕒 05:01:31</td>
-                    <td>🧩 fourSeason</td>
-                    <td><span class="status-error">❌ 数据为空</span><br><small>(<span class="fast-response">⚡ 2.44秒 <span class="response-tag fast">(快速响应)</span></span>)</small></td>
-                </tr>
-
-                <tr>
-                    <td>🕒 05:04:26</td>
-                    <td>🧩 kitanno</td>
-                    <td><span class="status-error">💥 报错</span><br><small>(<span class="very-slow-response">🐢 32.08秒 <span class="response-tag very-slow">(响应较慢)</span></span>)</small></td>
-                </tr>
-
-            </tbody>
-        </table>
-    </div>
-
-    <div class="footer">
-        <p><strong>📬 如有任何问题，请联系我们。</strong></p>
-        <p><strong>此致，</strong><br><strong>💻 技术部数据组</strong></p>
-    </div>
 </body>
 </html>
