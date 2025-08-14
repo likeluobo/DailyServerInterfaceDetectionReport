@@ -1,212 +1,244 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>酒店接口调用结果 - 2025-08-14</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-        .header h2 {
-            margin: 10px 0 0 0;
-            font-size: 1.5em;
-            font-weight: normal;
-        }
-        .summary-box {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        .summary-stats {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-        }
-        .stat-item {
-            padding: 15px;
-        }
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-        }
-        .success { color: #28a745; }
-        .fail { color: #dc3545; }
-        .total { color: #007bff; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .status-success { color: #28a745; }
-        .status-error { color: #dc3545; }
-        .status-warning { color: #ffc107; }
-        .fast-response { color: #28a745; }
-        .normal-response { color: #20c997; }
-        .slow-response { color: #ffc107; }
-        .very-slow-response { color: #fd7e14; }
-        .response-tag {
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8em;
-        }
-        .fast { background-color: #d4edda; color: #155724; }
-        .normal { background-color: #d1ecf1; color: #0c5460; }
-        .slow { background-color: #fff3cd; color: #856404; }
-        .very-slow { background-color: #f8d7da; color: #721c24; }
-        .section {
-            margin-bottom: 30px;
-        }
-        .section-title {
-            color: #2c3e50;
-            border-left: 4px solid #667eea;
-            padding-left: 15px;
-            margin-bottom: 20px;
-        }
-        .performance-stats {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        .perf-item {
-            text-align: center;
-        }
-        .perf-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #667eea;
-        }
-        .footer {
-            text-align: left;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        hr {
-            border: 0;
-            height: 1px;
-            background: #eee;
-            margin: 30px 0;
-        }
-
-        /* 移动端适配样式 */
-        @media screen and (max-width: 768px) {
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>酒店接口调用结果 - 2025-08-14</title>
+        <style>
             body {
-                padding: 10px;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f7fa;
             }
-
             .header {
-                padding: 20px 15px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 40px 30px;
+                border-radius: 15px;
+                text-align: center;
+                margin-bottom: 30px;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+                position: relative;
+                overflow: hidden;
             }
-
+            .header::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+                transform: rotate(30deg);
+            }
+            .header-content {
+                position: relative;
+                z-index: 1;
+            }
             .header h1 {
-                font-size: 1.8em;
+                margin: 0 0 15px 0;
+                font-size: 2.8em;
+                letter-spacing: 1px;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             }
-
+            .header-date {
+                font-size: 1.4em;
+                font-weight: 300;
+                opacity: 0.95;
+                margin: 0;
+                letter-spacing: 1px;
+            }
+            .header-date::before {
+                content: "📅 ";
+            }
+            .summary-box {
+                background: white;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 30px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
             .summary-stats {
-                flex-direction: column;
-                align-items: center;
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
             }
-
             .stat-item {
-                margin-bottom: 15px;
+                padding: 15px;
             }
-
+            .stat-number {
+                font-size: 2em;
+                font-weight: bold;
+            }
+            .success { color: #28a745; }
+            .fail { color: #dc3545; }
+            .total { color: #007bff; }
             table {
-                font-size: 0.9em;
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                margin-bottom: 30px;
             }
-
             th, td {
-                padding: 10px 8px;
+                padding: 15px;
+                text-align: left;
+                border-bottom: 1px solid #eee;
             }
-
-            .performance-stats {
-                flex-direction: column;
-                align-items: center;
+            th {
+                background-color: #f8f9fa;
+                font-weight: 600;
             }
-
-            .perf-item {
-                margin-bottom: 15px;
+            tr:hover {
+                background-color: #f5f5f5;
             }
-        }
-
-        @media screen and (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-
-            .header {
-                padding: 15px 10px;
-            }
-
-            .header h1 {
-                font-size: 1.5em;
-            }
-
-            table {
+            .status-success { color: #28a745; }
+            .status-error { color: #dc3545; }
+            .status-warning { color: #ffc107; }
+            .fast-response { color: #28a745; }
+            .normal-response { color: #20c997; }
+            .slow-response { color: #ffc107; }
+            .very-slow-response { color: #fd7e14; }
+            .response-tag {
+                padding: 2px 6px;
+                border-radius: 4px;
                 font-size: 0.8em;
             }
-
-            th, td {
-                padding: 8px 5px;
+            .fast { background-color: #d4edda; color: #155724; }
+            .normal { background-color: #d1ecf1; color: #0c5460; }
+            .slow { background-color: #fff3cd; color: #856404; }
+            .very-slow { background-color: #f8d7da; color: #721c24; }
+            .section {
+                margin-bottom: 30px;
+            }
+            .section-title {
+                color: #2c3e50;
+                border-left: 4px solid #667eea;
+                padding-left: 15px;
+                margin-bottom: 20px;
+            }
+            .performance-stats {
+                display: flex;
+                justify-content: space-around;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+            .perf-item {
+                text-align: center;
+            }
+            .perf-value {
+                font-size: 1.5em;
+                font-weight: bold;
+                color: #667eea;
+            }
+            .footer {
+                text-align: left;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+            }
+            hr {
+                border: 0;
+                height: 1px;
+                background: #eee;
+                margin: 30px 0;
             }
 
-            /* 表格横向滚动 */
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
+            /* 移动端适配样式 */
+            @media screen and (max-width: 768px) {
+                body {
+                    padding: 10px;
+                }
+
+                .header {
+                    padding: 30px 20px;
+                }
+
+                .header h1 {
+                    font-size: 2em;
+                }
+
+                .header-date {
+                    font-size: 1.2em;
+                }
+
+                .summary-stats {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .stat-item {
+                    margin-bottom: 15px;
+                }
+
+                table {
+                    font-size: 0.9em;
+                }
+
+                th, td {
+                    padding: 10px 8px;
+                }
+
+                .performance-stats {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .perf-item {
+                    margin-bottom: 15px;
+                }
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>🏨 酒店接口调用结果</h1>
-        <h2>2025-08-14</h2>
-    </div>
 
+            @media screen and (max-width: 480px) {
+                body {
+                    padding: 5px;
+                }
 
+                .header {
+                    padding: 25px 15px;
+                }
+
+                .header h1 {
+                    font-size: 1.7em;
+                }
+
+                .header-date {
+                    font-size: 1.1em;
+                }
+
+                table {
+                    font-size: 0.8em;
+                }
+
+                th, td {
+                    padding: 8px 5px;
+                }
+
+                /* 表格横向滚动 */
+                table {
+                    display: block;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <h1>🏨 酒店接口调用结果</h1>
+                <p class="header-date">2025-08-14</p>
+            </div>
+        </div>
+    
     <div class="summary-box">
         <h2 class="section-title">📊 接口调用统计</h2>
         <div class="summary-stats">
