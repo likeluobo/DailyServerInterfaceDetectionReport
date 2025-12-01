@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>酒店接口调用结果</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/png" href="https://img.icons8.com/forma-light-sharp/96/science-application.png">
+        <style>
+            body {
+                font-family: 'Inter', 'SF Pro Display', 'PingFang SC', '微软雅黑', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f7fa;
+            }
+            .header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 40px 30px;
+                border-radius: 15px;
+                margin-bottom: 30px;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+                position: relative;
+                overflow: hidden;
+            }
+            .header::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+                transform: rotate(30deg);
+            }
+            .header-content {
+                position: relative;
+                z-index: 1;
+                text-align: center;
+            }
+            .header h1 {
+                margin: 0 0 15px 0;
+                font-size: 2.8em;
+                letter-spacing: 1px;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .update-date {
+                position: absolute;
+                bottom: 20px;
+                right: 30px;
+                font-size: 1em;
+                font-weight: bold;
+                opacity: 0.95;
+                margin: 0;
+                letter-spacing: 1px;
+                z-index: 2;
+            }
+            .summary-box {
+                background: white;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 30px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+            .summary-stats {
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+            }
+            .stat-item {
+                padding: 15px;
+            }
+            .stat-number {
+                font-size: 2em;
+                font-weight: bold;
+            }
+            .success { color: #28a745; }
+            .fail { color: #dc3545; }
+            .total { color: #007bff; }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                margin-bottom: 30px;
+                table-layout: fixed;
+                font-size: 25px; /* 进一步增大表格默认字体 */
+            }
+            th, td {
+                padding: 20px;
+                text-align: center;
+                border-bottom: 1px solid #eee;
+                font-weight: bold;
+            }
+            th {
+                background-color: #f8f9fa;
+                font-weight: 600;
+                font-size: 20px; /* 表头字体进一步增大 */
+            }
+            td {
+                font-size: 18px; /* 数据单元格字体进一步增大 */
+            }
+            tr:hover {
+                background-color: #f5f5f5;
+            }
+            .status-success { color: #28a745; }
+            .status-error { color: #dc3545; }
+            .status-warning { color: #ffc107; }
+            .fast-response { color: #28a745; }
+            .normal-response { color: #20c997; }
+            .slow-response { color: #ffc107; }
+            .very-slow-response { color: #fd7e14; }
+            .response-tag {
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-size: 0.8em;
+            }
+            .fast { background-color: #d4edda; color: #155724; }
+            .normal { background-color: #d1ecf1; color: #0c5460; }
+            .slow { background-color: #fff3cd; color: #856404; }
+            .very-slow { background-color: #f8d7da; color: #721c24; }
+            .section {
+                margin-bottom: 30px;
+            }
+            .section-title {
+                color: #2c3e50;
+                border-left: 4px solid #667eea;
+                padding-left: 15px;
+                margin-bottom: 20px;
+            }
+            .performance-stats {
+                display: flex;
+                justify-content: space-around;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+            .perf-item {
+                text-align: center;
+            }
+            .perf-value {
+                font-size: 1.5em;
+                font-weight: bold;
+                color: #667eea;
+            }
+            .time-value {
+                color: #667eea;
+                font-weight: bold;
+            }
+            .interface-name, .interface-status {
+                color: #667eea;
+                font-weight: bold;
+            }
+            .error-interface-name, .error-interface-status, .error-time-value {
+                color: #dc3545;
+                font-weight: bold;
+            }
+            .time-group-title {
+                background-color: #e9ecef;
+                font-weight: bold;
+                text-align: left;
+                padding: 10px 20px;
+            }
+            hr {
+                border: 0;
+                height: 1px;
+                background: #eee;
+                margin: 30px 0;
+            }
+
+            /* 移动端适配样式 */
+            @media screen and (max-width: 768px) {
+                body {
+                    padding: 10px;
+                }
+
+                .header {
+                    padding: 30px 20px;
+                }
+
+                .header h1 {
+                    font-size: 2em;
+                }
+
+                .update-date {
+                    bottom: 15px;
+                    right: 20px;
+                    font-size: 0.9em;
+                }
+
+                .summary-stats {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .stat-item {
+                    margin-bottom: 15px;
+                }
+
+                table {
+                    font-size: 17px; /* 增大移动端表格字体 */
+                }
+
+                th {
+                    font-size: 18px; /* 增大移动端表头字体 */
+                }
+
+                td {
+                    font-size: 17px; /* 增大移动端数据单元格字体 */
+                }
+
+                th, td {
+                    padding: 12px 10px;
+                }
+
+                .performance-stats {
+                    flex-direction: column;
+                    align-items: center;
+                }
+
+                .perf-item {
+                    margin-bottom: 15px;
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                body {
+                    padding: 5px;
+                }
+
+                .header {
+                    padding: 25px 15px;
+                }
+
+                .header h1 {
+                    font-size: 1.7em;
+                }
+
+                .update-date {
+                    bottom: 10px;
+                    right: 15px;
+                    font-size: 0.8em;
+                }
+
+                table {
+                    font-size: 16px; /* 增大小屏幕设备表格字体 */
+                }
+
+                th {
+                    font-size: 17px; /* 增大小屏幕设备表头字体 */
+                }
+
+                td {
+                    font-size: 16px; /* 增大小屏幕设备数据单元格字体 */
+                }
+
+                th, td {
+                    padding: 10px 8px;
+                }
+
+                /* 表格横向滚动 */
+                table {
+                    display: block;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <h1>🏨 酒店接口调用结果</h1>
+            </div>
+            <p class="update-date">更新于 2025-12-02 05:04:08</p>
+        </div>
+    
+    <div class="section">
+        <h2 class="section-title">📊 接口调用统计</h2>
+        <div class="performance-stats">
+            <div class="perf-item">
+                <div><b> 🔢 总调用次数</b></div>
+                <div class="perf-value">43</div>
+            </div>
+            <div class="perf-item">
+                <div><b> ✅ 成功次数</b></div>
+                <div class="perf-value">6</div>
+            </div>
+            <div class="perf-item">
+                <div><b> ❌ 失败次数</b></div>
+                <div class="perf-value">37</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">🚀 接口性能分析</h2>
+        <div class="performance-stats">
+            <div class="perf-item">
+                <div><b> ⏱️ 平均响应时间</b></div>
+                <div class="perf-value">5.79秒</div>
+            </div>
+            <div class="perf-item">
+                <div><b> 🏃 最快响应时间</b></div>
+                <div class="perf-value">0.19秒</div>
+            </div>
+            <div class="perf-item">
+                <div><b> 🐢 最慢响应时间</b></div>
+                <div class="perf-value">35.03秒</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">⚠️ 亟需关注接口</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>📡 接口名称</th>
+                    <th>📊 状态</th>
+                    <th>⏱️ 耗时</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">radisson</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.3秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">S_GDS</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>21.51秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">Shangri_La</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.58秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hiltonAPP</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.35秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hiltonWx</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.55秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">marriottEn</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">HRS_IOS</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.67秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hyattPc</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.85秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">accor</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>32.69秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">booking</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.28秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">rosewood</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>21.68秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">fourSeason</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>8.3秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">mandarinoriental</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">ctrip</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.37秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">agoda</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.83秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">ihgPC</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.19秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">sonesta</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.08秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hotelDe</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>5.63秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">wyndham</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>2.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">kempinski</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>11.36秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hyattWx</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">googleHotel</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.63秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">ostrovok</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.19秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">agodaWx</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>7.58秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">bookSecure</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>35.03秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hoshino</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>2.75秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">charmdeer</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>17.83秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">travelline</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.09秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">tajhotel</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>7.94秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">BDGDS</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.81秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">nnrh</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>5.97秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">fuxun</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.78秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">melia</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.74秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">crown</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.05秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">kitanno</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>5.46秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">meituan</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.51秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">dida</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.56秒</span></b></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">📡 接口调用详情</h2>
+
+        <div class="time-group-title">❌ 异常接口 (37个)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>📡 接口名称</th>
+                    <th>📊 状态</th>
+                    <th>⏱️ 耗时</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">radisson</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.3秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">S_GDS</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>21.51秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">Shangri_La</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.58秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hiltonAPP</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.35秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hiltonWx</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.55秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">marriottEn</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">HRS_IOS</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.67秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hyattPc</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.85秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">accor</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>32.69秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">booking</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.28秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">rosewood</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>21.68秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">fourSeason</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>8.3秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">mandarinoriental</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">ctrip</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.37秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">agoda</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.83秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">ihgPC</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.19秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">sonesta</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>3.08秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hotelDe</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>5.63秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">wyndham</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>2.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">kempinski</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>11.36秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hyattWx</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.11秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">googleHotel</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.63秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">ostrovok</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.19秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">agodaWx</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>7.58秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">bookSecure</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>35.03秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">hoshino</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>2.75秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">charmdeer</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>报错</b></td>
+                    <td><b class="error-time-value"><span>17.83秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">travelline</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.09秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">tajhotel</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>7.94秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">BDGDS</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.81秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">nnrh</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>5.97秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">fuxun</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.78秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">melia</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>2.74秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">crown</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.05秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">kitanno</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>5.46秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">meituan</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>0.51秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="error-interface-name">dida</b></td>
+                    <td class="error-interface-status"><span class="status-error"></span> <b>数据为空</b></td>
+                    <td><b class="error-time-value"><span>1.56秒</span></b></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <div class="time-group-title">⏱️ 0-5秒响应接口 (4个)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>📡 接口名称</th>
+                    <th>📊 状态</th>
+                    <th>⏱️ 耗时</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td><span></span> <b class="interface-name">ascott</b></td>
+                    <td class="interface-status"><span class="status-success"></span> <b>成功</b></td>
+                    <td><b class="time-value"><span>3.55秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="interface-name">cheval</b></td>
+                    <td class="interface-status"><span class="status-success"></span> <b>成功</b></td>
+                    <td><b class="time-value"><span>3.6秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="interface-name">sixSenses</b></td>
+                    <td class="interface-status"><span class="status-success"></span> <b>成功</b></td>
+                    <td><b class="time-value"><span>3.7秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="interface-name">agoda0813</b></td>
+                    <td class="interface-status"><span class="status-success"></span> <b>成功</b></td>
+                    <td><b class="time-value"><span>4.82秒</span></b></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <div class="time-group-title">⏱️ 5-10秒响应接口 (2个)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>📡 接口名称</th>
+                    <th>📊 状态</th>
+                    <th>⏱️ 耗时</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td><span></span> <b class="interface-name">marriottCn</b></td>
+                    <td class="interface-status"><span class="status-success"></span> <b>成功</b></td>
+                    <td><b class="time-value"><span>5.26秒</span></b></td>
+                </tr>
+
+                <tr>
+                    <td><span></span> <b class="interface-name">hiltonPC</b></td>
+                    <td class="interface-status"><span class="status-success"></span> <b>成功</b></td>
+                    <td><b class="time-value"><span>5.31秒</span></b></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>
